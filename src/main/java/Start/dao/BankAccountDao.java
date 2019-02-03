@@ -38,9 +38,9 @@ public class BankAccountDao {
 
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
+//    @Transactional(propagation = Propagation.MANDATORY)
     public void addAmount(Long id, double amount) throws BankTransactionException {
-        BankAccountEntity bankAccountEntity = this.findById(id);
+        BankAccountEntity bankAccountEntity = this.findById(Long.valueOf(id.toString()));
         if (bankAccountEntity = null) {
             throw new BankTransactionException();
         }
@@ -54,7 +54,7 @@ public class BankAccountDao {
 
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
+//    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
     public void sendMoney(Long fromAccountId, Long toAccountId, double amount) throws BankTransactionException {
         addAmount(toAccountId, amount);
         addAmount(fromAccountId, -amount);

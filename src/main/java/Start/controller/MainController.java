@@ -1,6 +1,7 @@
 package Start.controller;
 
 import Start.dao.BankAccountDao;
+import Start.exception.BankTransactionException;
 import Start.form.SendMoneyForm;
 import Start.model.BankAccountInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class MainController {
 
     @RequestMapping(value = "/sendMoney", method = RequestMethod.GET)
     public String viewSendMoneyPage(Model model) {
-        SendMoneyForm form = new SendMoneyForm(1L, 2L, 500);
+        SendMoneyForm form = new SendMoneyForm(1L, 2L, Double.valueOf(500));
         model.addAttribute("sendMoneyForm", form);
         return "sendMoneyPage";
 
@@ -35,7 +36,16 @@ public class MainController {
 
         System.out.println("Send Money::" + sendMoneyForm.getAmount());
         try {
-            bankAccountDao.sendMoney();
+            bankAccountDao.sendMoney(sendMoneyForm.getFromAccountId(),
+                    sendMoneyForm.getToAccountId(),
+                    sendMoneyForm.getAmount());
+        } catch (BankTransactionException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            return "/sendMoneyPage";
+
         }
+        return "redirect:/";
+
+
     }
 }
